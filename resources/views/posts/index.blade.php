@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="bg-image hover-overlay ripple rounded-0" data-mdb-ripple-color="light">
-            <a href="/profile/{{$post->user->id}}">
+            <a href="/p/{{$post->id}}">
                 <img class="img-fluid" src="/storage/{{$post->image}}"
                 alt="Card image cap" />
             </a>
@@ -41,11 +41,21 @@
                             if($like->post_id == $post->id)
                             {
                                 $does_exist = true;
-                                // dd($does_exist);
                             }
                         }
                 @endphp
                 <like-button post-id="{{$post->id}}" liked = "{{ $does_exist}}"></like-button>
+
+                @php
+                $authUser = auth()->user()->email;
+                $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
+                            $full_url = $protocol . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]p/$post->id";
+                            $headers = 'From: ' . $authUser . "\r\n";
+                @endphp
+                <a href="mailto:?subject=Sharing post&amp;body=Check out this post <?= $full_url?>" class="envelope">
+                    <i class="fas fa-share ml-2" style="font-size: 50px; color: black;"></i>
+                </a>
+
             </div>
         </div>
     </div>
